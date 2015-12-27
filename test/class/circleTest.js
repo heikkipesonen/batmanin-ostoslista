@@ -35,6 +35,16 @@ describe('circle', () =>{
     expect(circle.right).to.equal(120);
   });
 
+  it('should calculate width and height correctly', () => {
+    expect(circle.top).to.equal(-100);
+    expect(circle.bottom).to.equal(100);
+    expect(circle.left).to.equal(-100);
+    expect(circle.right).to.equal(100);
+
+    expect(circle.width).to.equal(200);
+    expect(circle.height).to.equal(200);
+  });
+
   it('should contain point within radius', () => {
     let point = {x: 20, y: 20};
     expect(circle.contains(point)).to.equal(true);

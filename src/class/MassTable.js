@@ -2,9 +2,17 @@ import mass from '../periodictable';
 
 const MASS_TO_KILOGRAM = 1.660539040;
 const SOLAR_MASS = 1.9891 * Math.pow(10,30);
-const SOLAR_RADIUS = 5;
+const SOLAR_RADIUS = 50;
 
 class MassTable {
+  static getRotationTime (mass, distance) {
+    let G = 6.674 / 100;
+    let u = G * mass * 1000;
+    let pi2 = 2*Math.PI;
+    let a = Math.pow(distance, 3);
+    return pi2 * Math.sqrt(a/u) / 1000;
+  }
+
   static get solarMass () {
       return SOLAR_MASS;
   }

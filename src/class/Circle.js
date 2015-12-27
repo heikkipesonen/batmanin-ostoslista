@@ -1,3 +1,5 @@
+import Rectangle from './Rectangle';
+
 class Circle {
   constructor (centerx, centery, radius) {
     this.state = {
@@ -68,6 +70,10 @@ class Circle {
 
   get right () {
     return this.left + this.width;
+  }
+
+  getSquareBounds () {
+    return new Rectangle({x: this.left, y: this.top, width: this.width, height: this.height});
   }
 
   contains (point) {

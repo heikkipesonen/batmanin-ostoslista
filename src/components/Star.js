@@ -3,13 +3,15 @@ import Matter from '../class/Matter';
 import MassTable from '../class/MassTable';
 import Utils from '../class/Utils';
 import Circle from '../class/Circle';
+import Planet from './Planet';
 
 class Star extends React.Component {
   constructor (props) {
     super(props);
 
     this.state = {
-      mass: Math.random() * (Math.random() * 40)
+      mass: Math.random() * (Math.random() * 40),
+      planets: []
     };
 
     this.state.radius = MassTable.solarRadius * Math.pow(this.state.mass, 0.8);
@@ -20,6 +22,25 @@ class Star extends React.Component {
 
   componentDidMount() {
     this.generateComposition();
+    this.generatePlanets();
+
+  }
+
+  generatePlanets() {
+    let count = Math.random()*30;
+    let planets = [];
+
+    while (planets.length < count) {
+      planets.push({
+        radius: Math.random() * this.state.radius,
+        position: Math.random() * 360,
+        distance: Math.random()  * this.state.radius * 100 + (this.state.radius * 10)
+      });
+    }
+
+    this.setState({
+      planets: planets
+    });
   }
 
   generateComposition() {
@@ -54,7 +75,19 @@ class Star extends React.Component {
       marginRight: -this.state.radius +'px'
     };
 
-    return (<div className="star" style={style} onClick={this.onClick}></div>);
+    return (
+      <div className="star" style={style} onClick={this.onClick}>
+        {this.state.planets.map((planet, planetIndex) => {
+          return <Planet
+            origin={planet.distance - this.state.radius}
+            distance={planet.distance}
+            radius={planet.radius}
+            time={MassTable.getRotationTime(this.state.mass, planet.distance)}
+            position={planet.position}
+            key={planetIndex}></Planet>
+        })}
+      </div>
+    );
   }
 }
 
