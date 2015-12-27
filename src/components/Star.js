@@ -9,21 +9,22 @@ class Star extends React.Component {
   constructor (props) {
     super(props);
 
+    let matter = new Matter(MassTable.generateComposition({H: Math.random()*5 + 88,He: Math.random()*5}));
+    matter.toMass(MassTable.fromSolar(Math.random() * (Math.random() * 40)));
+
     this.state = {
-      mass: Math.random() * (Math.random() * 40),
+      composition: matter,
+      mass: matter.getMass(),
       planets: []
     };
-
-    this.state.radius = MassTable.solarRadius * Math.pow(this.state.mass, 0.8);
-    this.state.color = Utils.KelvinToRgb((Math.random()*1500) * this.state.mass );
-
+console.log(this.state);
+    this.state.radius = MassTable.massToSolarRadius(this.state.mass);
+    this.state.color = Utils.KelvinToRgb((Math.random()*1500) * MassTable.toSolar(this.state.mass));
     this.reservedSpace = new Circle(0,0, this.state.radius * 50);
   }
 
   componentDidMount() {
-    this.generateComposition();
     this.generatePlanets();
-
   }
 
   generatePlanets() {
@@ -34,7 +35,7 @@ class Star extends React.Component {
       planets.push({
         radius: Math.random() * this.state.radius,
         position: Math.random() * 360,
-        distance: Math.random()  * this.state.radius * 100 + (this.state.radius * 10)
+        distance: this.getOutermostPlanetOrbit() + (Math.random()  * this.state.radius * 100 + (this.state.radius * 10))
       });
     }
 
@@ -43,13 +44,17 @@ class Star extends React.Component {
     });
   }
 
-  generateComposition() {
-    this.setState({
-      composition: Matter.fromWeight(MassTable.generateComposition({
-          H: Math.random()*5 + 88,
-          He: Math.random()*5
-        }), MassTable.fromSolar(this.state.mass))
-      });
+  getPlanetOrbits (planets) {
+    planets = planets ? planets : this.state.planets;
+    return planets.map((planet) => {
+      return planet.distance;
+    });
+  }
+
+  getOutermostPlanetOrbit(planets) {
+    return this.getPlanetOrbits().reduce((current, next) => {
+      return current > next ? current : next;
+    }, 0);
   }
 
   getRadius () {
@@ -82,7 +87,7 @@ class Star extends React.Component {
             origin={planet.distance - this.state.radius}
             distance={planet.distance}
             radius={planet.radius}
-            time={MassTable.getRotationTime(this.state.mass, planet.distance)}
+            time={MassTable.getRotationTime(MassTable.toSolar(this.state.mass), planet.distance)}
             position={planet.position}
             key={planetIndex}></Planet>
         })}

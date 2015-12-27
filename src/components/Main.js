@@ -14,12 +14,17 @@ class AppComponent extends React.Component {
       stars: []
     };
 
-    while (this.state.stars.length < 50) {
-      this.state.stars.push({
-        x: (Math.random() * 100000) - 50000,
-        y: (Math.random() * 100000) - 50000
-      });
-    }
+    this.state.stars.push({
+      x: 800,
+      y: 800
+    })
+
+    // while (this.state.stars.length < 60) {
+    //   this.state.stars.push({
+    //     x: (Math.random() * 100000) - 50000,
+    //     y: (Math.random() * 100000) - 50000
+    //   });
+    // }
   }
 
   render() {

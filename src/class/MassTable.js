@@ -13,6 +13,10 @@ class MassTable {
     return pi2 * Math.sqrt(a/u) / 1000;
   }
 
+  static massToSolarRadius(mass) {
+    return this.solarRadius * Math.pow(this.toSolar(mass), 0.8)
+  }
+
   static get solarMass () {
       return SOLAR_MASS;
   }
@@ -61,8 +65,8 @@ class MassTable {
     return elements;
   }
 
-  static fromSolar (multiplier) {
-    return SOLAR_MASS * multiplier;
+  static fromSolar (mass) {
+    return SOLAR_MASS * mass;
   }
 
   static toSolar (mass) {

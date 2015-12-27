@@ -18,6 +18,26 @@ class Matter {
     }
   }
 
+  toMass(mass) {
+    let total = this.getMass();
+    let multiplier = mass / total;
+
+    this.getElements().forEach((element) => {
+      this.elements[element] = this.elements[element] * multiplier;
+    });
+
+    return this.getMass();
+  }
+
+  getArray() {
+    return this.getElements().map((element) => {
+      return {
+        name: element,
+        value: this.elements[element]
+      }
+    });
+  }
+
   /**
    * get list of elements
    * @return {[type]} [description]
@@ -30,7 +50,7 @@ class Matter {
    * calculate total number of elements
    * @return {[type]} [description]
    */
-  getTotalAmount () {
+  getMass () {
     return this.getElements().reduce((current, element) =>{
       return current + this.elements[element];
     } ,0)
@@ -41,7 +61,7 @@ class Matter {
    * @return {[type]} [description]
    */
   getPercentages() {
-    let total = this.getTotalAmount();
+    let total = this.getMass();
     let elements = {};
 
     this.getElements().forEach((element) => {
@@ -49,33 +69,6 @@ class Matter {
     });
 
     return elements;
-  }
-
-  /**
-   * get mass
-   * @return {[type]} [description]
-   */
-  get mass () {
-    return this.getElements().reduce((current, element) => {
-      return current + MassTable.numberToWeight(element, this.elements[element]);
-    },0);
-  }
-
-  /**
-   * get mass in relation to mass of the sun
-   * @return {[type]} [description]
-   */
-  get solarMass () {
-    return MassTable.toSolar(this.mass);
-  }
-
-  asArray () {
-    return this.getElements().map((key) => {
-      return {
-        name: key,
-        value: this.elements[key]
-      };
-    });
   }
 
   getMaximumAvailable (composition) {
@@ -143,18 +136,6 @@ class Matter {
     }
   }
 
-  /**
-   * take mass of elements
-   * @param  {[type]} element [description]
-   * @param  {[type]} mass    [description]
-   * @return {[type]}         [description]
-   */
-  takeMass(element, mass) {
-    let totalNumber = MassTable.weightToNumber(element, mass);
-    let taken = this.take(element, totalNumber);
-
-    return MassTable.numberToWeight(element, taken);
-  }
 
   /**
    * merge another matter object
@@ -169,26 +150,6 @@ class Matter {
     });
   }
 
-  /**
-   * create matter object from weight and mixture of lements
-   * @param  {[type]} elements [description]
-   * @param  {[type]} mass     [description]
-   * @return {[type]}          [description]
-   */
-  static fromWeight(elements, mass) {
-    let newElements = {};
-    let elementNames = Object.keys(elements);
-    let totalCountOfElements = elementNames.reduce((current, next) => {
-      return current + elements[next];
-    }, 0);
-
-    elementNames.map((element) => {
-      let ratio = elements[element] / totalCountOfElements;
-      newElements[element] = MassTable.weightToNumber(element, mass * ratio);
-    });
-
-    return new Matter(newElements);
-  }
 }
 
 export default Matter;
